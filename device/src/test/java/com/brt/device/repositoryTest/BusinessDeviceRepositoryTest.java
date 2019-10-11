@@ -80,22 +80,42 @@ public class BusinessDeviceRepositoryTest {
         locationDeviceRepository.save(locationDevice);
         System.err.println("success!");
     }
+
+    @Test
+    public void createReportDevice(){
+        ReportDevice reportDevice = new ReportDevice();
+        reportDevice.setCode("501004");
+        reportDevice.setName("报警设备3号");
+        reportDevice.setDetail("报警了！");
+        reportDevice.setCreateTime(new Date());
+        reportDevice.setUpdateTime(new Date());
+
+        BusinessDevice businessDevice = businessDeviceRepository.findById(27L).get();
+        reportDevice.setBusinessDevice(businessDevice);
+        reportDeviceRepository.save(reportDevice);
+        System.err.println("success!");
+
+    }
     @Test
 /*    @Transactional*/
     public void createCameraDevice(){
         CameraDevice cameraDevice = new CameraDevice();
-        cameraDevice.setCode("10003");
-        cameraDevice.setName("东热式摄像头1号");
+        cameraDevice.setCode("10004");
+        cameraDevice.setName("tora式摄像头3号");
         cameraDevice.setDetail("什么都有！");
         cameraDevice.setCreateTime(new Date());
         cameraDevice.setUpdateTime(new Date());
 
-        BusinessDevice businessDevice = businessDeviceRepository.findById(1L).get();
+        BusinessDevice businessDevice = businessDeviceRepository.findById(36L).get();
         cameraDevice.setBusinessDevice(businessDevice);
         cameraDeviceRepository.save(cameraDevice);
         System.err.println(cameraDevice);
     }
 
+    @Test
+    public void delete(){
+        cameraDeviceRepository.deleteById(47L);
+    }
     @Test
     public void optionalTest(){
         Optional<Integer> opt = Optional.of(1);

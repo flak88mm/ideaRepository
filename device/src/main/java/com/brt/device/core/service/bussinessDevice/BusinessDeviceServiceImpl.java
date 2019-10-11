@@ -14,11 +14,9 @@ import com.brt.device.rest.vo.ViewLocationDevice;
 import com.brt.device.rest.vo.ViewReportDevice;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.View;
 import java.util.*;
 
 @Service
@@ -191,6 +189,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
      * @return
      */
     @Override
+    @Transactional
     public ViewBusinessDevice updateBusinessDevice(ViewBusinessDevice viewBusinessDevice) {
         BusinessDevice businessDevice = businessDeviceRepository.getOne(viewBusinessDevice.getId());
         if (businessDevice == null) {
@@ -198,44 +197,66 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         }
         Date date = new Date();
         //更新业务设备
-        System.err.println(viewBusinessDevice);
-        BeanUtils.copyProperties(viewBusinessDevice, businessDevice);
-        businessDevice.setUpdateTime(date);
         viewBusinessDevice.setUpdateTime(date);
-        System.err.println(businessDevice);
+        BeanUtils.copyProperties(viewBusinessDevice, businessDevice);
         businessDeviceRepository.save(businessDevice);
         //更新关联定位设备
         ViewLocationDevice viewLocationDevice = viewBusinessDevice.getViewLocationDevice();
         if(!(viewLocationDevice == null)){
-            System.err.println(viewLocationDevice);
-            LocationDevice locationDevice = new LocationDevice();
-            BeanUtils.copyProperties(viewLocationDevice, locationDevice);
-            locationDevice.setUpdateTime(date);
-            locationDevice.setBusinessDevice(businessDevice);
-            System.err.println(locationDevice);
-            viewLocationDevice.setUpdateTime(date);
-            locationDeviceRepository.save(locationDevice);
+            if (businessDevice.getLocationDevice() == null ||
+                    viewLocationDevice.getId() == businessDevice.getLocationDevice().getId()) {
+                //业务设备未关联定位设备 或 业务设备原关联定位设备id与现关联定位设备id相同
+                LocationDevice locationDevice = new LocationDevice();
+                viewLocationDevice.setUpdateTime(date);
+                BeanUtils.copyProperties(viewLocationDevice, locationDevice);
+                locationDevice.setBusinessDevice(businessDevice);
+                locationDeviceRepository.save(locationDevice);
+                viewLocationDevice.setId(locationDevice.getId());
+                viewBusinessDevice.setViewLocationDevice(viewLocationDevice);
+            } else if (!(viewLocationDevice.getId() == businessDevice.getLocationDevice().getId())) {
+                //业务设备原关联定位设备id与现关联定位设备id不同
+                return null;
+            }
         }
         //更新关联报警设备信息
         ViewReportDevice viewReportDevice = viewBusinessDevice.getViewReportDevice();
-        if(!(viewReportDevice == null)){
-            ReportDevice reportDevice = new ReportDevice();
-            BeanUtils.copyProperties(viewReportDevice,reportDevice);
-            reportDevice.setUpdateTime(date);
-            reportDevice.setBusinessDevice(businessDevice);
-            viewReportDevice.setUpdateTime(date);
-            reportDeviceRepository.save(reportDevice);
+        if(!(viewReportDevice == null)) {
+            if (businessDevice.getReportDevice() == null ||
+                    viewReportDevice.getId() == businessDevice.getReportDevice().getId()) {
+                //业务设备未关联报警设备 或 业务设备原关联报警设备id与现关联报警设备id相同
+                ReportDevice reportDevice = new ReportDevice();
+                viewReportDevice.setUpdateTime(date);
+                BeanUtils.copyProperties(viewReportDevice, reportDevice);
+                reportDevice.setBusinessDevice(businessDevice);
+                reportDeviceRepository.save(reportDevice);
+                viewReportDevice.setId(reportDevice.getId());
+                viewBusinessDevice.setViewReportDevice(viewReportDevice);
+            } else if (!(viewReportDevice.getId() == businessDevice.getReportDevice().getId())) {
+                //业务设备原关联报警设备id与现关联报警设备id不同
+                return null;
+            }
         }
         //更新关联摄像头组信息
         Set<ViewCameraDevice> viewCameraDeviceSet = viewBusinessDevice.getViewCameraDevices();
-        if(!viewCameraDeviceSet.isEmpty()){
+        //原先关联该业务设备的摄像头组
+        Set<CameraDevice> oldCameraDeviceSet = businessDevice.getCameraDevices();
+        List<Long> newCameraDeviceIds = new ArrayList<>();
+        if(!(viewCameraDeviceSet == null)){
             for(ViewCameraDevice viewCameraDevice:viewCameraDeviceSet){
                 CameraDevice cameraDevice = new CameraDevice();
-                BeanUtils.copyProperties(viewCameraDevice, cameraDevice);
-                cameraDevice.setUpdateTime(date);
-                cameraDevice.setBusinessDevice(businessDevice);
                 viewCameraDevice.setUpdateTime(date);
+                BeanUtils.copyProperties(viewCameraDevice, cameraDevice);
+                cameraDevice.setBusinessDevice(businessDevice);
                 cameraDeviceRepository.save(cameraDevice);
+                newCameraDeviceIds.add(cameraDevice.getId());
+            }
+            //删除多余的关联该业务设备的摄像头
+            for(CameraDevice oldCameraDevice:oldCameraDeviceSet){
+                if(!newCameraDeviceIds.contains(oldCameraDevice.getId())){
+                    CameraDevice cameraDeviceTemp = new CameraDevice();
+                    BeanUtils.copyProperties(oldCameraDevice,cameraDeviceTemp);
+                    cameraDeviceRepository.delete(cameraDeviceTemp);
+                }
             }
         }
         return viewBusinessDevice;
