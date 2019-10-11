@@ -33,7 +33,7 @@ public class BusinessDeviceRepositoryTest {
 
     @Test
     public void testForGit(){
-        System.err.println("hello git");
+        System.err.println("从github上pull");
     }
     @Test
     public void page(){
