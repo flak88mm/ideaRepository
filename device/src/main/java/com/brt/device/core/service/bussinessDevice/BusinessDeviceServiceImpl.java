@@ -238,25 +238,26 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         }
         //更新关联摄像头组信息
         Set<ViewCameraDevice> viewCameraDeviceSet = viewBusinessDevice.getViewCameraDevices();
+        if(viewCameraDeviceSet == null){
+            return null;
+        }
         //原先关联该业务设备的摄像头组
         Set<CameraDevice> oldCameraDeviceSet = businessDevice.getCameraDevices();
-        List<Long> newCameraDeviceIds = new ArrayList<>();
-        if(!(viewCameraDeviceSet == null)){
-            for(ViewCameraDevice viewCameraDevice:viewCameraDeviceSet){
-                CameraDevice cameraDevice = new CameraDevice();
-                viewCameraDevice.setUpdateTime(date);
-                BeanUtils.copyProperties(viewCameraDevice, cameraDevice);
-                cameraDevice.setBusinessDevice(businessDevice);
-                cameraDeviceRepository.save(cameraDevice);
-                newCameraDeviceIds.add(cameraDevice.getId());
-            }
-            //删除多余的关联该业务设备的摄像头
-            for(CameraDevice oldCameraDevice:oldCameraDeviceSet){
-                if(!newCameraDeviceIds.contains(oldCameraDevice.getId())){
-                    CameraDevice cameraDeviceTemp = new CameraDevice();
-                    BeanUtils.copyProperties(oldCameraDevice,cameraDeviceTemp);
-                    cameraDeviceRepository.delete(cameraDeviceTemp);
-                }
+
+        Set<Long> newCameraDeviceIds = new HashSet<>();
+        for(ViewCameraDevice viewCameraDevice:viewCameraDeviceSet) {
+            CameraDevice cameraDevice = new CameraDevice();
+            viewCameraDevice.setUpdateTime(date);
+            BeanUtils.copyProperties(viewCameraDevice, cameraDevice);
+            cameraDevice.setBusinessDevice(businessDevice);
+            cameraDeviceRepository.save(cameraDevice);
+            viewCameraDevice.setId(cameraDevice.getId());
+            newCameraDeviceIds.add(cameraDevice.getId());
+        }
+        //删除多余的关联该业务设备的摄像头
+        for(CameraDevice oldCameraDevice:oldCameraDeviceSet){
+            if(!newCameraDeviceIds.contains(oldCameraDevice.getId())){
+                cameraDeviceRepository.deleteById(oldCameraDevice.getId());
             }
         }
         return viewBusinessDevice;
