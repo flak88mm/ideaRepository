@@ -1,13 +1,9 @@
 package com.brt.device.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Proxy;
-
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Proxy(lazy = false)
 @Table(name = "T_CAMERA_DEVICE")
 public class CameraDevice {
     @Id
@@ -21,8 +17,7 @@ public class CameraDevice {
     private Date updateTime;
 
     @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "BUSINESS_DEVICE_ID")
+    @JoinColumn(name = "BUSINESS_DEVICE_ID", nullable = false)
     private BusinessDevice businessDevice;
 
     public Long getId() {

@@ -1,13 +1,10 @@
 package com.brt.device.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Proxy;
-
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
-@Proxy(lazy = false)
 @Table(name = "T_REPORT_DEVICE")
 public class ReportDevice {
     @Id
@@ -17,12 +14,11 @@ public class ReportDevice {
     private String name;
     private String reserve;
     private String detail;
-    private Date createTime;
-    private Date updateTime;
+    private Timestamp createTime;
+    private Timestamp updateTime;
 
     @OneToOne
-    @JsonIgnore
-    @JoinColumn(name = "BUSINESS_DEVICE_ID")
+    @JoinColumn(name = "BUSINESS_DEVICE_ID", nullable = false)
     private BusinessDevice businessDevice;
 
     public Long getId() {
@@ -65,19 +61,19 @@ public class ReportDevice {
         this.detail = detail;
     }
 
-    public Date getCreateTime() {
+    public Timestamp getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public Timestamp getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -89,17 +85,4 @@ public class ReportDevice {
         this.businessDevice = businessDevice;
     }
 
-    @Override
-    public String toString() {
-        return "ReportDevice{" +
-                "id=" + id +
-                ", code=" + code +
-                ", name='" + name + '\'' +
-                ", reserve='" + reserve + '\'' +
-                ", detail='" + detail + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                /*", businessDevice=" + businessDevice +*/
-                '}';
-    }
 }

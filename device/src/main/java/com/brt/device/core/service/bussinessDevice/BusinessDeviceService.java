@@ -9,9 +9,9 @@ public interface BusinessDeviceService {
 
     ViewBusinessDevice createBusinessDevice(ViewBusinessDevice viewBusinessDevice);
 
-    ViewBusinessDevice getBusinessDeviceById(Long businessDeviceId);
+    ViewBusinessDevice getBusinessDeviceByBusinessDeviceId(Long businessDeviceId);
 
     List<ViewBusinessDevice> getAllBusinessDevices(Integer pageSize,Integer pageNum);
 
-    ViewBusinessDevice updateBusinessDevice(ViewBusinessDevice viewBusinessDevice);
+    ViewBusinessDevice updateBusinessDeviceByBusinessDeviceId(ViewBusinessDevice viewBusinessDevice);
 }

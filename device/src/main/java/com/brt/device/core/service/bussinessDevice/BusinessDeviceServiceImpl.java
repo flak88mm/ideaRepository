@@ -121,7 +121,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
      * @return 业务设备及其关联设备信息
      */
     @Override
-    public ViewBusinessDevice getBusinessDeviceById(Long businessDeviceId) {
+    public ViewBusinessDevice getBusinessDeviceByBusinessDeviceId(Long businessDeviceId) {
         Optional<BusinessDevice> businessDeviceOpt = businessDeviceRepository.findById(businessDeviceId);
         if (!businessDeviceOpt.isPresent()) {
             return null;
@@ -190,7 +190,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
      */
     @Override
     @Transactional
-    public ViewBusinessDevice updateBusinessDevice(ViewBusinessDevice viewBusinessDevice) {
+    public ViewBusinessDevice updateBusinessDeviceByBusinessDeviceId(ViewBusinessDevice viewBusinessDevice) {
         BusinessDevice businessDevice = businessDeviceRepository.getOne(viewBusinessDevice.getId());
         if (businessDevice == null) {
             return null;
@@ -203,61 +203,56 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         //更新关联定位设备
         ViewLocationDevice viewLocationDevice = viewBusinessDevice.getViewLocationDevice();
         if(!(viewLocationDevice == null)){
-            if (businessDevice.getLocationDevice() == null ||
-                    viewLocationDevice.getId() == businessDevice.getLocationDevice().getId()) {
-                //业务设备未关联定位设备 或 业务设备原关联定位设备id与现关联定位设备id相同
-                LocationDevice locationDevice = new LocationDevice();
-                viewLocationDevice.setUpdateTime(date);
-                BeanUtils.copyProperties(viewLocationDevice, locationDevice);
-                locationDevice.setBusinessDevice(businessDevice);
-                locationDeviceRepository.save(locationDevice);
-                viewLocationDevice.setId(locationDevice.getId());
-                viewBusinessDevice.setViewLocationDevice(viewLocationDevice);
-            } else if (!(viewLocationDevice.getId() == businessDevice.getLocationDevice().getId())) {
-                //业务设备原关联定位设备id与现关联定位设备id不同
-                return null;
+            if(!(businessDevice.getLocationDevice()==null) &&
+                    !(viewLocationDevice.getId() == businessDevice.getLocationDevice().getId())){
+                //业务设备原关联定位设备id与现关联定位设备id不同，删除原关联定位设备
+                locationDeviceRepository.delete(businessDevice.getLocationDevice());
             }
+            LocationDevice locationDevice = new LocationDevice();
+            viewLocationDevice.setUpdateTime(date);
+            BeanUtils.copyProperties(viewLocationDevice, locationDevice);
+            locationDevice.setBusinessDevice(businessDevice);
+            locationDeviceRepository.save(locationDevice);
+            viewLocationDevice.setId(locationDevice.getId());
+            viewBusinessDevice.setViewLocationDevice(viewLocationDevice);
         }
         //更新关联报警设备信息
         ViewReportDevice viewReportDevice = viewBusinessDevice.getViewReportDevice();
         if(!(viewReportDevice == null)) {
-            if (businessDevice.getReportDevice() == null ||
-                    viewReportDevice.getId() == businessDevice.getReportDevice().getId()) {
-                //业务设备未关联报警设备 或 业务设备原关联报警设备id与现关联报警设备id相同
-                ReportDevice reportDevice = new ReportDevice();
-                viewReportDevice.setUpdateTime(date);
-                BeanUtils.copyProperties(viewReportDevice, reportDevice);
-                reportDevice.setBusinessDevice(businessDevice);
-                reportDeviceRepository.save(reportDevice);
-                viewReportDevice.setId(reportDevice.getId());
-                viewBusinessDevice.setViewReportDevice(viewReportDevice);
-            } else if (!(viewReportDevice.getId() == businessDevice.getReportDevice().getId())) {
-                //业务设备原关联报警设备id与现关联报警设备id不同
-                return null;
+            if(!(businessDevice.getLocationDevice()==null) &&
+                    !(viewReportDevice.getId() == businessDevice.getReportDevice().getId())){
+                //业务设备原关联报警设备id与现关联报警设备id不同，删除原关联报警设备
+                reportDeviceRepository.delete(businessDevice.getReportDevice());
             }
+            ReportDevice reportDevice = new ReportDevice();
+            viewReportDevice.setUpdateTime(date);
+            BeanUtils.copyProperties(viewReportDevice, reportDevice);
+            reportDevice.setBusinessDevice(businessDevice);
+            reportDeviceRepository.save(reportDevice);
+            viewReportDevice.setId(reportDevice.getId());
+            viewBusinessDevice.setViewReportDevice(viewReportDevice);
         }
         //更新关联摄像头组信息
         Set<ViewCameraDevice> viewCameraDeviceSet = viewBusinessDevice.getViewCameraDevices();
-        if(viewCameraDeviceSet == null){
-            return null;
-        }
-        //原先关联该业务设备的摄像头组
-        Set<CameraDevice> oldCameraDeviceSet = businessDevice.getCameraDevices();
+        if(!(viewCameraDeviceSet == null) && !viewCameraDeviceSet.isEmpty()){
+            //原先关联该业务设备的摄像头组
+            Set<CameraDevice> oldCameraDeviceSet = businessDevice.getCameraDevices();
 
-        Set<Long> newCameraDeviceIds = new HashSet<>();
-        for(ViewCameraDevice viewCameraDevice:viewCameraDeviceSet) {
-            CameraDevice cameraDevice = new CameraDevice();
-            viewCameraDevice.setUpdateTime(date);
-            BeanUtils.copyProperties(viewCameraDevice, cameraDevice);
-            cameraDevice.setBusinessDevice(businessDevice);
-            cameraDeviceRepository.save(cameraDevice);
-            viewCameraDevice.setId(cameraDevice.getId());
-            newCameraDeviceIds.add(cameraDevice.getId());
-        }
-        //删除多余的关联该业务设备的摄像头
-        for(CameraDevice oldCameraDevice:oldCameraDeviceSet){
-            if(!newCameraDeviceIds.contains(oldCameraDevice.getId())){
-                cameraDeviceRepository.deleteById(oldCameraDevice.getId());
+            Set<Long> newCameraDeviceIds = new HashSet<>();
+            for(ViewCameraDevice viewCameraDevice:viewCameraDeviceSet) {
+                CameraDevice cameraDevice = new CameraDevice();
+                viewCameraDevice.setUpdateTime(date);
+                BeanUtils.copyProperties(viewCameraDevice, cameraDevice);
+                cameraDevice.setBusinessDevice(businessDevice);
+                cameraDeviceRepository.save(cameraDevice);
+                viewCameraDevice.setId(cameraDevice.getId());
+                newCameraDeviceIds.add(cameraDevice.getId());
+            }
+            //删除多余的关联该业务设备的摄像头
+            for(CameraDevice oldCameraDevice:oldCameraDeviceSet){
+                if(!newCameraDeviceIds.contains(oldCameraDevice.getId())){
+                    cameraDeviceRepository.deleteById(oldCameraDevice.getId());
+                }
             }
         }
         return viewBusinessDevice;

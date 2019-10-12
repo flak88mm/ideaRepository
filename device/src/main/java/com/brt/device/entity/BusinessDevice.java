@@ -1,13 +1,10 @@
 package com.brt.device.entity;
 
-import org.hibernate.annotations.Proxy;
-
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Set;
 
 @Entity
-@Proxy(lazy = false)
 @Table(name = "T_BUSINESS_DEVICE")
 public class BusinessDevice {
     @Id

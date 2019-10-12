@@ -21,8 +21,10 @@ public class ViewReportDevice {
     private Date createTime;
     @ApiModelProperty(value = "报警设备更新时间")
     private Date updateTime;
-    @ApiModelProperty(value = "关联业务设备")
+    @ApiModelProperty(value = "关联业务设备id")
     private Long businessDeviceId;
+    @ApiModelProperty(value = "关联业务设备名称")
+    private String businessDeviceName;
 
     public Long getId() {
         return id;
@@ -88,17 +90,26 @@ public class ViewReportDevice {
         this.businessDeviceId = businessDeviceId;
     }
 
+    public String getBusinessDeviceName() {
+        return businessDeviceName;
+    }
+
+    public void setBusinessDeviceName(String businessDeviceName) {
+        this.businessDeviceName = businessDeviceName;
+    }
+
     @Override
     public String toString() {
-        return "ViewCameraDevice{" +
+        return "ViewReportDevice{" +
                 "id=" + id +
-                ", code=" + code +
+                ", code='" + code + '\'' +
                 ", name='" + name + '\'' +
                 ", reserve='" + reserve + '\'' +
                 ", detail='" + detail + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", businessDeviceId=" + businessDeviceId +
+                ", businessDeviceName='" + businessDeviceName + '\'' +
                 '}';
     }
 }

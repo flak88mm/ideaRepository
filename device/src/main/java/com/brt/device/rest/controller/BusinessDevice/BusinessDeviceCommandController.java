@@ -1,27 +1,13 @@
 package com.brt.device.rest.controller.BusinessDevice;
 
 import com.brt.device.core.service.bussinessDevice.BusinessDeviceService;
-import com.brt.device.entity.BusinessDevice;
-import com.brt.device.entity.CameraDevice;
-import com.brt.device.repository.BusinessDeviceRepository;
-import com.brt.device.repository.CameraDeviceRepository;
 import com.brt.device.rest.vo.ResEntity;
 import com.brt.device.rest.vo.ViewBusinessDevice;
-import com.brt.device.rest.vo.ViewCameraDevice;
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.hibernate.validator.constraints.pl.REGON;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
-import sun.misc.Request;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @RestController
 @Api(tags = "BusinessDeviceQueryController-业务设备管理接口")
@@ -79,7 +65,7 @@ public class BusinessDeviceCommandController {
             return new ResEntity(null, false, "参数为空");
         }
         viewBusinessDevice.setId(businessDeviceId);
-        ViewBusinessDevice resVo = businessDeviceService.updateBusinessDevice(viewBusinessDevice);
+        ViewBusinessDevice resVo = businessDeviceService.updateBusinessDeviceByBusinessDeviceId(viewBusinessDevice);
         if (resVo == null){
             return new ResEntity(null, false, "更新业务设备失败");
         }

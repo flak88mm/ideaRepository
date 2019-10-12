@@ -1,7 +1,6 @@
 package com.brt.device.rest.controller.BusinessDevice;
 
 import com.brt.device.core.service.bussinessDevice.BusinessDeviceService;
-import com.brt.device.repository.BusinessDeviceRepository;
 import com.brt.device.rest.vo.ResEntity;
 import com.brt.device.rest.vo.ViewBusinessDevice;
 import io.swagger.annotations.Api;
@@ -52,7 +51,7 @@ public class BusinessDeviceQueryController {
         if (businessDeviceId == null){
             return new ResEntity(null, false, "参数为空");
         }
-        ViewBusinessDevice resVo = businessDeviceService.getBusinessDeviceById(businessDeviceId);
+        ViewBusinessDevice resVo = businessDeviceService.getBusinessDeviceByBusinessDeviceId(businessDeviceId);
         if (resVo == null){
             return new ResEntity(resVo, false, "该设备不存在");
         }
