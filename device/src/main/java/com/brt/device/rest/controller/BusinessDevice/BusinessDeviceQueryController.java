@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * @ClassName: BusinessDeviceQueryController 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author Zeng Nan
+ * @date 2019年10月14日 下午10:20:25
+ */
 @RestController
 @Api(tags = "BusinessDeviceQueryController-业务设备查询接口")
 public class BusinessDeviceQueryController {
@@ -19,8 +25,15 @@ public class BusinessDeviceQueryController {
     BusinessDeviceService businessDeviceService;
 
     /**
-     * 查询所有业务设备信息
-     * @return
+     * @author Zeng Nan   
+     * @date 2019年10月14日 下午10:20:21 
+     * @Title: getAllBusinessDevices 
+     * @Description: TODO(这里用一句话描述这个方法的作用) 
+     * @param @param pageSize
+     * @param @param pageNum
+     * @param @return    设定文件 
+     * @return ResEntity    返回类型 
+     * @throws
      */
     @RequestMapping(value = "/businessDevices", method = RequestMethod.GET)
     @ApiOperation(value = "查询所有业务设备", notes = "查询所有业务设备")
@@ -40,9 +53,14 @@ public class BusinessDeviceQueryController {
     }
 
     /**
-     * 根据id查询业务设备信息
-     * @param businessDeviceId 业务设备id
-     * @return
+     * @author Zeng Nan   
+     * @date 2019年10月14日 下午10:20:33 
+     * @Title: getBusinessDeviceById 
+     * @Description: TODO(这里用一句话描述这个方法的作用) 
+     * @param @param businessDeviceId
+     * @param @return    设定文件 
+     * @return ResEntity    返回类型 
+     * @throws
      */
     @RequestMapping(value = "/businessDevice/{businessDeviceId}", method = RequestMethod.GET)
     @ApiOperation(value = "根据id查询业务设备", notes = "根据id查询业务设备")

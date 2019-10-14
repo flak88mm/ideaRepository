@@ -1,15 +1,27 @@
 package com.brt.device.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+/**
+ * @ClassName: CameraDevice 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author Zeng Nan
+ * @date 2019年10月14日 下午10:17:16
+ */
 @Entity
 @Table(name = "T_CAMERA_DEVICE", schema = "BRTKPI")
 public class CameraDevice {
     @Id
-    @GeneratedValue(strategy =GenerationType.SEQUENCE , generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator", initialValue = 1, allocationSize = 1,
-            sequenceName = "SEQ_CAMERA_DEVICE")
+    @GeneratedValue(generator = "sequenceGenerator")
+    @GenericGenerator(
+            name = "sequenceGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {@Parameter(name = "sequence_name", value = "SEQ_T_BUSINESS_DEVICE")}
+    )
     private Long id;
     private String code;
     private String name;

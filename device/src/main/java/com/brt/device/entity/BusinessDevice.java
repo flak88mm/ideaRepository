@@ -1,16 +1,32 @@
 package com.brt.device.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
 
+/**
+ * @ClassName: BusinessDevice 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author Zeng Nan
+ * @date 2019年10月14日 下午10:17:09
+ */
 @Entity
 @Table(name = "T_BUSINESS_DEVICE", schema = "BRTKPI")
 public class BusinessDevice {
-    @Id
+/*    @Id
     @GeneratedValue(strategy =GenerationType.SEQUENCE , generator = "sequenceGenerator")
     @SequenceGenerator(name = "sequenceGenerator", initialValue = 1, allocationSize = 1,
-            sequenceName = "SEQ_BUSINESS_DEVICE")
+            sequenceName = "SEQ_BUSINESS_DEVICE")*/
+    @Id
+    @GeneratedValue(generator = "sequenceGenerator")
+    @GenericGenerator(
+            name = "sequenceGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {@Parameter(name = "sequence_name", value = "SEQ_T_BUSINESS_DEVICE")}
+    )
     private Long id;
     private String code;
     private String name;
