@@ -37,17 +37,17 @@ public class BusinessDeviceRepositoryTest {
     BusinessDeviceService businessDeviceService;
 
     @Test
+    public void testForGit(){
+        System.err.println("第二次分支测试 1607");
+    }
+
+    @Test
     @Transactional
     public void test(){
         List<ViewBusinessDevice> list = businessDeviceService.getAllBusinessDevices(1,1);
         for(ViewBusinessDevice viewBusinessDevice:list){
             System.err.println(viewBusinessDevice);
         }
-    }
-
-    @Test
-    public void testForGit(){
-        System.err.println("从github上pull");
     }
 
     @Test
