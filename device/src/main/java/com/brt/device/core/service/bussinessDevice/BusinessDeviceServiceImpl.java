@@ -39,7 +39,6 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
     @Override
     public List<ViewBusinessDevice> getAllBusinessDevices(Integer pageSize, Integer pageNum) {
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.ASC, "id");
-                //(pageNum, pageSize, Sort.Direction.ASC, "id");
         Page<BusinessDevice> businessDevicePage = businessDeviceRepository.findAll(pageable);
         if (businessDevicePage == null){
             return null;
@@ -90,10 +89,10 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
             viewBusinessDevice.setViewReportDevice(viewReportDevice);
         }
         //查询关联摄像头设备组
-        List<CameraDevice> cameraDeviceSet = cameraDeviceRepository.findByBusinessDeviceId(businessDeviceId);
-        if (!(cameraDeviceSet == null) && !cameraDeviceSet.isEmpty()) {
+        List<CameraDevice> cameraDeviceList = cameraDeviceRepository.findByBusinessDeviceId(businessDeviceId);
+        if (!(cameraDeviceList == null) && !cameraDeviceList.isEmpty()) {
             List<ViewCameraDevice> viewCameraDeviceSet = new ArrayList<>();
-            for (CameraDevice cameraDevice : cameraDeviceSet) {
+            for (CameraDevice cameraDevice : cameraDeviceList) {
                 ViewCameraDevice viewCameraDevice = new ViewCameraDevice();
                 BeanUtils.copyProperties(cameraDevice, viewCameraDevice);
                 viewCameraDevice.setBusinessDeviceId(businessDeviceId);
@@ -106,38 +105,12 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
     }
 
     /**
-     * 根据id删除业务设备及其关联设备
-     * @param id 业务设备id
-     * @return true：功能实现成功，false：功能实现失败。
-     */
-    @Override
-    public boolean deleteBusinessDevice(Long id) {
-        Optional<BusinessDevice> businessDeviceOpt = businessDeviceRepository.findById(id);
-        if (!businessDeviceOpt.isPresent()) {
-            return false;
-        }
-        BusinessDevice businessDevice = businessDeviceOpt.get();
-        LocationDevice locationDevice = businessDevice.getLocationDevice();
-        ReportDevice reportDevice = businessDevice.getReportDevice();
-        Set<CameraDevice> cameraDeviceSet = businessDevice.getCameraDevices();
-        if (!(locationDevice == null) || !(reportDevice == null) || !(cameraDeviceSet.isEmpty())) {
-            //该业务设备有关联设备
-            return false;
-        }
-        businessDeviceRepository.deleteById(id);
-        Optional<BusinessDevice> businessDeviceRes = businessDeviceRepository.findById(id);
-        if (!businessDeviceRes.isPresent()) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * 新增业务设备及其关联设备
      * @param viewBusinessDevice 业务设备及其关联设备信息
      * @return 业务设备及其关联设备信息
      */
     @Override
+    @Transactional
     public ViewBusinessDevice createBusinessDevice(ViewBusinessDevice viewBusinessDevice) {
         if(viewBusinessDevice == null){
             return null;
@@ -145,52 +118,59 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         BusinessDevice businessDevice = new BusinessDevice();
         if(businessDeviceRepository.findByCode(viewBusinessDevice.getCode()) != null){
+            //业务设备code已存在，更新业务设备信息及其他设备信息
             viewBusinessDevice.setId(businessDeviceRepository.findByCode(viewBusinessDevice.getCode()).getId());
             return updateBusinessDeviceByBusinessDeviceId(viewBusinessDevice);
         }else{
             viewBusinessDevice.setCreateTime(timestamp);
             viewBusinessDevice.setUpdateTime(timestamp);
             BeanUtils.copyProperties(viewBusinessDevice, businessDevice);
-            businessDeviceRepository.save(businessDevice);
-            //该业务设备关联定位设备
-            LocationDevice locationDevice = new LocationDevice();
-            ViewLocationDevice viewLocationDevice = viewBusinessDevice.getViewLocationDevice();
-            viewLocationDevice.setCreateTime(timestamp);
-            viewLocationDevice.setUpdateTime(timestamp);
-            BeanUtils.copyProperties(viewLocationDevice, locationDevice);
-            locationDevice.setBusinessDevice(businessDevice);
-            locationDeviceRepository.save(locationDevice);
-            //更新vo中相关数据
-            viewLocationDevice.setId(locationDevice.getId());
-            viewLocationDevice.setBusinessDeviceId(businessDevice.getId());
-            viewLocationDevice.setBusinessDeviceName(businessDevice.getName());
-            //该业务设备关联报警设备
-            ReportDevice reportDevice = new ReportDevice();
-            ViewReportDevice viewReportDevice = viewBusinessDevice.getViewReportDevice();
-            viewReportDevice.setCreateTime(new Timestamp(System.currentTimeMillis()));
-            viewReportDevice.setUpdateTime(new Timestamp(System.currentTimeMillis()));
-            BeanUtils.copyProperties(viewReportDevice, reportDevice);
-            reportDevice.setBusinessDevice(businessDevice);
-            reportDeviceRepository.save(reportDevice);
-            //更新vo中相关数据
-            viewReportDevice.setId(reportDevice.getId());
-            viewReportDevice.setBusinessDeviceId(businessDevice.getId());
-            viewReportDevice.setBusinessDeviceName(businessDevice.getName());
-            //该业务设备关联摄像头设备
-            List<ViewCameraDevice> viewCameraDeviceSet = viewBusinessDevice.getViewCameraDevices();
-            for (ViewCameraDevice viewCameraDevice : viewCameraDeviceSet) {
-                CameraDevice cameraDevice = new CameraDevice();
-                viewCameraDevice.setCreateTime(timestamp);
-                viewCameraDevice.setUpdateTime(timestamp);
-                BeanUtils.copyProperties(viewCameraDevice, cameraDevice);
-                cameraDevice.setBusinessDevice(businessDevice);
-                cameraDeviceRepository.save(cameraDevice);
-                //更新vo中相关数据
-                viewCameraDevice.setId(cameraDevice.getId());
-                viewCameraDevice.setBusinessDeviceId(businessDevice.getId());
-                viewCameraDevice.setBusinessDeviceName(businessDevice.getName());
-            }
+            businessDevice = businessDeviceRepository.save(businessDevice);
             viewBusinessDevice.setId(businessDevice.getId());
+            ViewLocationDevice viewLocationDevice = viewBusinessDevice.getViewLocationDevice();
+            if(viewLocationDevice != null){
+                //该业务设备关联定位设备
+                LocationDevice locationDevice = new LocationDevice();
+                viewLocationDevice.setCreateTime(timestamp);
+                viewLocationDevice.setUpdateTime(timestamp);
+                BeanUtils.copyProperties(viewLocationDevice, locationDevice);
+                locationDevice.setBusinessDevice(businessDevice);
+                locationDeviceRepository.save(locationDevice);
+                //更新vo中相关数据
+                viewLocationDevice.setId(locationDevice.getId());
+                viewLocationDevice.setBusinessDeviceId(businessDevice.getId());
+                viewLocationDevice.setBusinessDeviceName(businessDevice.getName());
+            }
+            ViewReportDevice viewReportDevice = viewBusinessDevice.getViewReportDevice();
+            if(viewReportDevice != null){
+                //该业务设备关联报警设备
+                ReportDevice reportDevice = new ReportDevice();
+                viewReportDevice.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                viewReportDevice.setUpdateTime(new Timestamp(System.currentTimeMillis()));
+                BeanUtils.copyProperties(viewReportDevice, reportDevice);
+                reportDevice.setBusinessDevice(businessDevice);
+                reportDeviceRepository.save(reportDevice);
+                //更新vo中相关数据
+                viewReportDevice.setId(reportDevice.getId());
+                viewReportDevice.setBusinessDeviceId(businessDevice.getId());
+                viewReportDevice.setBusinessDeviceName(businessDevice.getName());
+            }
+            List<ViewCameraDevice> viewCameraDeviceList = viewBusinessDevice.getViewCameraDevices();
+            if(viewCameraDeviceList !=null && !viewCameraDeviceList.isEmpty()){
+                //该业务设备关联摄像头设备
+                for (ViewCameraDevice viewCameraDevice : viewCameraDeviceList) {
+                    CameraDevice cameraDevice = new CameraDevice();
+                    viewCameraDevice.setCreateTime(timestamp);
+                    viewCameraDevice.setUpdateTime(timestamp);
+                    BeanUtils.copyProperties(viewCameraDevice, cameraDevice);
+                    cameraDevice.setBusinessDevice(businessDevice);
+                    cameraDeviceRepository.save(cameraDevice);
+                    //更新vo中相关数据
+                    viewCameraDevice.setId(cameraDevice.getId());
+                    viewCameraDevice.setBusinessDeviceId(businessDevice.getId());
+                    viewCameraDevice.setBusinessDeviceName(businessDevice.getName());
+                }
+            }
             return viewBusinessDevice;
         }
     }
@@ -214,8 +194,8 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         businessDeviceRepository.save(businessDevice);
         //更新关联定位设备
         ViewLocationDevice viewLocationDevice = viewBusinessDevice.getViewLocationDevice();
-        if(viewLocationDevice == null){
-            //现关联定位设备为空，删除原关联定位设备
+        if(viewLocationDevice == null && businessDevice.getLocationDevice() != null){
+            //现关联定位设备为空，原关联设备存在，删除原关联定位设备
             locationDeviceRepository.delete(businessDevice.getLocationDevice());
         }
         if(viewLocationDevice != null){
@@ -240,8 +220,8 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         }
         //更新关联报警设备信息
         ViewReportDevice viewReportDevice = viewBusinessDevice.getViewReportDevice();
-        if(viewReportDevice == null){
-            //现关联报警设备为空，删除原关联报警设备
+        if(viewReportDevice == null && businessDevice.getReportDevice() != null){
+            //现关联报警设备为空，原关联报警设备存在，删除原关联报警设备
             reportDeviceRepository.delete(businessDevice.getReportDevice());
         }
         if(viewReportDevice != null) {
@@ -266,7 +246,7 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         }
         //更新关联摄像头组信息
         List<ViewCameraDevice> viewCameraDeviceList = viewBusinessDevice.getViewCameraDevices();
-        List<CameraDevice> oldCameraDeviceSet = cameraDeviceRepository.findByBusinessDeviceId(businessDevice.getId());
+        List<CameraDevice> oldCameraDeviceList = cameraDeviceRepository.findByBusinessDeviceId(businessDevice.getId());
         Set<Long> newCameraDeviceIds = new HashSet<>();
         if(viewCameraDeviceList != null && !viewCameraDeviceList.isEmpty()){
             for(ViewCameraDevice viewCameraDevice:viewCameraDeviceList) {
@@ -286,12 +266,39 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
             }
         }
         //删除多余的关联该业务设备的摄像头
-        for(CameraDevice oldCameraDevice:oldCameraDeviceSet){
+        for(CameraDevice oldCameraDevice:oldCameraDeviceList){
             if(!newCameraDeviceIds.contains(oldCameraDevice.getId())){
                 cameraDeviceRepository.deleteById(oldCameraDevice.getId());
             }
         }
         return viewBusinessDevice;
+    }
+
+    /**
+     * 根据id删除业务设备及其关联设备
+     * @param id 业务设备id
+     * @return true：功能实现成功，false：功能实现失败。
+     */
+    @Override
+    public boolean deleteBusinessDevice(Long id) {
+        Optional<BusinessDevice> businessDeviceOpt = businessDeviceRepository.findById(id);
+        if (!businessDeviceOpt.isPresent()) {
+            return false;
+        }
+        BusinessDevice businessDevice = businessDeviceOpt.get();
+        LocationDevice locationDevice = businessDevice.getLocationDevice();
+        ReportDevice reportDevice = businessDevice.getReportDevice();
+        Set<CameraDevice> cameraDeviceSet = businessDevice.getCameraDevices();
+        if (locationDevice != null || reportDevice != null || !cameraDeviceSet.isEmpty()) {
+            //该业务设备有关联设备
+            return false;
+        }
+        businessDeviceRepository.deleteById(id);
+        Optional<BusinessDevice> businessDeviceRes = businessDeviceRepository.findById(id);
+        if (!businessDeviceRes.isPresent()) {
+            return true;
+        }
+        return false;
     }
 
 }

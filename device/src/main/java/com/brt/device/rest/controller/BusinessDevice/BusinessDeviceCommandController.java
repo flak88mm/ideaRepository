@@ -17,17 +17,17 @@ public class BusinessDeviceCommandController {
 
     /**
      * 根据id删除业务设备
-     * @param id 业务设备id
+     * @param businessDeviceId 业务设备id
      * @return
      */
     @RequestMapping(value = "/businessDevice/{businessDeviceId}", method = RequestMethod.DELETE)
     @ApiOperation(value = "根据id删除业务设备", notes = "根据id删除业务设备")
     @ApiImplicitParam(paramType = "path", name = "businessDeviceId", value = "业务设备id", required = true, dataType = "Long")
-    public ResEntity deleteBusinessDevice(@PathVariable("businessDeviceId") Long id) {
-        if(id == null){
+    public ResEntity deleteBusinessDevice(@PathVariable("businessDeviceId") Long businessDeviceId) {
+        if(businessDeviceId == null){
             return new ResEntity(null, false, "参数为空");
         }
-        boolean resVo = businessDeviceService.deleteBusinessDevice(id);
+        boolean resVo = businessDeviceService.deleteBusinessDevice(businessDeviceId);
         if (!resVo) {
             return new ResEntity(resVo, false, "删除业务设备失败");
         }

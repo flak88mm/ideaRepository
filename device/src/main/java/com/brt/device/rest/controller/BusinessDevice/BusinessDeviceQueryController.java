@@ -41,7 +41,7 @@ public class BusinessDeviceQueryController {
 
     /**
      * 根据id查询业务设备信息
-     * @param businessDeviceId
+     * @param businessDeviceId 业务设备id
      * @return
      */
     @RequestMapping(value = "/businessDevice/{businessDeviceId}", method = RequestMethod.GET)
