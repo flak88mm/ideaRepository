@@ -11,7 +11,7 @@ public interface BusinessDeviceService {
 
     ViewBusinessDevice getBusinessDeviceByBusinessDeviceId(Long businessDeviceId);
 
-    List<ViewBusinessDevice> getAllBusinessDevices(Integer pageSize,Integer pageNum);
+    List<ViewBusinessDevice> getAllBusinessDevices(Integer pageSize, Integer pageNum);
 
     ViewBusinessDevice updateBusinessDeviceByBusinessDeviceId(ViewBusinessDevice viewBusinessDevice);
 }

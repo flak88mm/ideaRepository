@@ -3,8 +3,8 @@ package com.brt.device.rest.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Date;
-import java.util.Set;
+import java.sql.Timestamp;
+import java.util.List;
 
 @ApiModel(value = "业务设备vo")
 public class ViewBusinessDevice {
@@ -21,15 +21,15 @@ public class ViewBusinessDevice {
     @ApiModelProperty(value = "业务设备类型")
     private String deviceType;
     @ApiModelProperty(value = "业务设备创建时间")
-    private Date createTime;
+    private Timestamp createTime;
     @ApiModelProperty(value = "业务设备更新时间")
-    private Date updateTime;
+    private Timestamp updateTime;
     @ApiModelProperty(value = "关联定位设备")
     private ViewLocationDevice viewlocationDevice;
     @ApiModelProperty(value = "关联报警设备")
     private ViewReportDevice viewReportDevice;
     @ApiModelProperty(value = "关联摄像头设备组")
-    private Set<ViewCameraDevice> viewCameraDevices;
+    private List<ViewCameraDevice> viewCameraDevices;
 
     public Long getId() {
         return id;
@@ -79,19 +79,19 @@ public class ViewBusinessDevice {
         this.deviceType = deviceType;
     }
 
-    public Date getCreateTime() {
+    public Timestamp getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public Timestamp getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -111,11 +111,11 @@ public class ViewBusinessDevice {
         this.viewReportDevice = viewReportDevice;
     }
 
-    public Set<ViewCameraDevice> getViewCameraDevices() {
+    public List<ViewCameraDevice> getViewCameraDevices() {
         return viewCameraDevices;
     }
 
-    public void setViewCameraDevices(Set<ViewCameraDevice> viewCameraDevices) {
+    public void setViewCameraDevices(List<ViewCameraDevice> viewCameraDevices) {
         this.viewCameraDevices = viewCameraDevices;
     }
 

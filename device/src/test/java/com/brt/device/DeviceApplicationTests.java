@@ -26,4 +26,9 @@ public class DeviceApplicationTests {
         System.err.println(connection);
     }
 
+    @Test
+    public void getConectionTest(){
+
+    }
+
 }

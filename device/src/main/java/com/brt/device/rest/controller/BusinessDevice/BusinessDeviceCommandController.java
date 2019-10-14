@@ -17,7 +17,7 @@ public class BusinessDeviceCommandController {
 
     /**
      * 根据id删除业务设备
-     * @param id
+     * @param id 业务设备id
      * @return
      */
     @RequestMapping(value = "/businessDevice/{businessDeviceId}", method = RequestMethod.DELETE)
@@ -31,12 +31,12 @@ public class BusinessDeviceCommandController {
         if (!resVo) {
             return new ResEntity(resVo, false, "删除业务设备失败");
         }
-        return new ResEntity(resVo, true, "成功时该信息无效");
+        return new ResEntity(resVo, true, "ok");
     }
 
     /**
      * 新增业务设备及其关联设备
-     * @param viewBusinessDevice
+     * @param viewBusinessDevice 业务设备及其关联设备信息
      * @return
      */
     @RequestMapping(value = "/businessDevice", method = RequestMethod.POST)
@@ -49,12 +49,12 @@ public class BusinessDeviceCommandController {
         if (resVo == null){
             return new ResEntity(null, false, "新增业务设备失败");
         }
-        return new ResEntity(resVo, true, "成功时该信息无效");
+        return new ResEntity(resVo, true, "ok");
     }
 
     /**
-     * 修改业务设备及其关联设备
-     * @param viewBusinessDevice
+     * 修改业务设备及其关联设备信息
+     * @param viewBusinessDevice 业务设备及其关联设备信息
      * @return
      */
     @RequestMapping(value = "/businessDevice/{businessDeviceId}", method = RequestMethod.PUT)
@@ -69,7 +69,7 @@ public class BusinessDeviceCommandController {
         if (resVo == null){
             return new ResEntity(null, false, "更新业务设备失败");
         }
-        return new ResEntity(resVo, true, "成功时该信息无效");
+        return new ResEntity(resVo, true, "ok");
     }
 
 }

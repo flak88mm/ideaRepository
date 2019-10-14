@@ -1,19 +1,21 @@
 package com.brt.device.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Entity
-@Table(name = "T_LOCATION_DEVICE")
+@Table(name = "T_LOCATION_DEVICE", schema = "BRTKPI")
 public class LocationDevice {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy =GenerationType.SEQUENCE , generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator", initialValue = 1, allocationSize = 1,
+            sequenceName = "SEQ_LOCATION_DEVICE")
     private Long id;
     private String code;
     private String name;
     private String detail;
-    private Date createTime;
-    private Date updateTime;
+    private Timestamp createTime;
+    private Timestamp updateTime;
 
     @OneToOne
     @JoinColumn(name = "BUSINESS_DEVICE_ID", nullable = false)
@@ -51,19 +53,19 @@ public class LocationDevice {
         this.detail = detail;
     }
 
-    public Date getCreateTime() {
+    public Timestamp getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public Timestamp getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -75,16 +77,4 @@ public class LocationDevice {
         this.businessDevice = businessDevice;
     }
 
-    @Override
-    public String toString() {
-        return "LocationDevice{" +
-                "id=" + id +
-                ", code=" + code +
-                ", name='" + name + '\'' +
-                ", detail='" + detail + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                /*", businessDevice=" + businessDevice +*/
-                '}';
-    }
 }

@@ -1,22 +1,24 @@
 package com.brt.device.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Entity
-@Table(name = "T_BUSINESS_DEVICE")
+@Table(name = "T_BUSINESS_DEVICE", schema = "BRTKPI")
 public class BusinessDevice {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy =GenerationType.SEQUENCE , generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator", initialValue = 1, allocationSize = 1,
+            sequenceName = "SEQ_BUSINESS_DEVICE")
     private Long id;
     private String code;
     private String name;
     private String reserve;
     private String detail;
     private String deviceType;
-    private Date createTime;
-    private Date updateTime;
+    private Timestamp createTime;
+    private Timestamp updateTime;
 
     @OneToOne(mappedBy = "businessDevice")
     private LocationDevice locationDevice;
@@ -75,19 +77,19 @@ public class BusinessDevice {
         this.deviceType = deviceType;
     }
 
-    public Date getCreateTime() {
+    public Timestamp getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public Timestamp getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -115,20 +117,4 @@ public class BusinessDevice {
         this.cameraDevices = cameraDevices;
     }
 
-    @Override
-    public String toString() {
-        return "BusinessDevice{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", name='" + name + '\'' +
-                ", reserve='" + reserve + '\'' +
-                ", detail='" + detail + '\'' +
-                ", deviceType='" + deviceType + '\'' +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", locationDevice=" + locationDevice +
-                ", reportDevice=" + reportDevice +
-                ", cameraDevices=" + cameraDevices +
-                '}';
-    }
 }

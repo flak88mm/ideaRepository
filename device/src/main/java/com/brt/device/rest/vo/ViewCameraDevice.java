@@ -3,7 +3,7 @@ package com.brt.device.rest.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 @ApiModel(value = "摄像头设备vo")
 public class ViewCameraDevice {
@@ -18,9 +18,9 @@ public class ViewCameraDevice {
     @ApiModelProperty(value = "摄像头设备详情")
     private String detail;
     @ApiModelProperty(value = "摄像头设备创建时间")
-    private Date createTime;
+    private Timestamp createTime;
     @ApiModelProperty(value = "摄像头设备更新时间")
-    private Date updateTime;
+    private Timestamp updateTime;
     @ApiModelProperty(value = "关联业务设备id")
     private Long businessDeviceId;
     @ApiModelProperty(value = "关联业务设备名称")
@@ -66,19 +66,19 @@ public class ViewCameraDevice {
         this.detail = detail;
     }
 
-    public Date getCreateTime() {
+    public Timestamp getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public Timestamp getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
     }
 

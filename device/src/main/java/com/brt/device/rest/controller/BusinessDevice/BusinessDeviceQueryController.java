@@ -36,7 +36,7 @@ public class BusinessDeviceQueryController {
         if (resVo == null){
             return new ResEntity(resVo, false, "查询业务设备失败");
         }
-        return new ResEntity(resVo, true, "成功时该信息无效");
+        return new ResEntity(resVo, true, "ok");
     }
 
     /**
@@ -55,6 +55,6 @@ public class BusinessDeviceQueryController {
         if (resVo == null){
             return new ResEntity(resVo, false, "该设备不存在");
         }
-        return new ResEntity(resVo, true, "成功时该信息无效");
+        return new ResEntity(resVo, true, "ok");
     }
 }

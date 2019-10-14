@@ -2,13 +2,14 @@ package com.brt.device.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Entity
-@Table(name = "T_REPORT_DEVICE")
+@Table(name = "T_REPORT_DEVICE", schema = "BRTKPI")
 public class ReportDevice {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy =GenerationType.SEQUENCE , generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator", initialValue = 1, allocationSize = 1,
+            sequenceName = "SEQ_REPORT_DEVICE")
     private Long id;
     private String code;
     private String name;

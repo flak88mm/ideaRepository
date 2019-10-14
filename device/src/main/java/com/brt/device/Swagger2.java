@@ -15,7 +15,7 @@ public class Swagger2 {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("com.brt.device"))
                 .paths(PathSelectors.any())
                 .build();
     }
