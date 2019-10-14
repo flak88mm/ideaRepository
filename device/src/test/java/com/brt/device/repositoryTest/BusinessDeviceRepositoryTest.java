@@ -38,6 +38,7 @@ public class BusinessDeviceRepositoryTest {
 
     @Test
     public void testForGit(){
+        System.err.println("分支更进一步？");
         System.err.println("与github连接的分支测试 1625");
     }
 
