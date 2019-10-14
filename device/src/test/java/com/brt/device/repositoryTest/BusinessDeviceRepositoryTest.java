@@ -39,6 +39,7 @@ public class BusinessDeviceRepositoryTest {
     @Test
     public void testForGit(){
         System.err.println("第二次分支测试 1607");
+        System.err.println("分支树会在log显示么？");
     }
 
     @Test
