@@ -38,7 +38,7 @@ public class BusinessDeviceRepositoryTest {
 
     @Test
     public void testForGit(){
-        System.err.println("第二次分支测试 1607");
+        System.err.println("与github连接的分支测试 1625");
     }
 
     @Test
