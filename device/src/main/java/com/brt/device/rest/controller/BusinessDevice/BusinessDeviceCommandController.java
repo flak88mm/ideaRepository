@@ -9,6 +9,12 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @ClassName: BusinessDeviceCommandController 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author Zeng Nan
+ * @date 2019年10月14日 下午10:19:13
+ */
 @RestController
 @Api(tags = "BusinessDeviceQueryController-业务设备管理接口")
 public class BusinessDeviceCommandController {
@@ -16,9 +22,14 @@ public class BusinessDeviceCommandController {
     BusinessDeviceService businessDeviceService;
 
     /**
-     * 根据id删除业务设备
-     * @param businessDeviceId 业务设备id
-     * @return
+     * @author Zeng Nan   
+     * @date 2019年10月14日 下午10:19:52 
+     * @Title: deleteBusinessDevice 
+     * @Description: TODO(这里用一句话描述这个方法的作用) 
+     * @param @param businessDeviceId
+     * @param @return    设定文件 
+     * @return ResEntity    返回类型 
+     * @throws
      */
     @RequestMapping(value = "/businessDevice/{businessDeviceId}", method = RequestMethod.DELETE)
     @ApiOperation(value = "根据id删除业务设备", notes = "根据id删除业务设备")
@@ -35,9 +46,14 @@ public class BusinessDeviceCommandController {
     }
 
     /**
-     * 新增业务设备及其关联设备
-     * @param viewBusinessDevice 业务设备及其关联设备信息
-     * @return
+     * @author Zeng Nan   
+     * @date 2019年10月14日 下午10:20:00 
+     * @Title: createBusinessDevice 
+     * @Description: TODO(这里用一句话描述这个方法的作用) 
+     * @param @param viewBusinessDevice
+     * @param @return    设定文件 
+     * @return ResEntity    返回类型 
+     * @throws
      */
     @RequestMapping(value = "/businessDevice", method = RequestMethod.POST)
     @ApiOperation(value = "新增业务设备及其关联设备", notes = "新增业务设备及其关联设备")
@@ -53,9 +69,15 @@ public class BusinessDeviceCommandController {
     }
 
     /**
-     * 修改业务设备及其关联设备信息
-     * @param viewBusinessDevice 业务设备及其关联设备信息
-     * @return
+     * @author Zeng Nan   
+     * @date 2019年10月14日 下午10:20:07 
+     * @Title: upadteBusinessDevice 
+     * @Description: TODO(这里用一句话描述这个方法的作用) 
+     * @param @param viewBusinessDevice
+     * @param @param businessDeviceId
+     * @param @return    设定文件 
+     * @return ResEntity    返回类型 
+     * @throws
      */
     @RequestMapping(value = "/businessDevice/{businessDeviceId}", method = RequestMethod.PUT)
     @ApiOperation(value = "修改业务设备及其关联设备", notes = "修改业务设备及其关联设备")

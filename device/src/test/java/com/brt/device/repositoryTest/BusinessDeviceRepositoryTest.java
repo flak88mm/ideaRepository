@@ -53,9 +53,9 @@ public class BusinessDeviceRepositoryTest {
     @Test
     public void createBusinessDevice(){
         BusinessDevice businessDevice = new BusinessDevice();
-        businessDevice.setCode("10002");
+        businessDevice.setCode("10001");
         businessDevice.setName("厌战式业务设备");
-        businessDevice.setDetail("什么都有！");
+        businessDevice.setDetail("无描述");
         businessDevice.setDeviceType("1");
         businessDevice.setCreateTime(new Timestamp(System.currentTimeMillis()));
         businessDevice.setUpdateTime(new Timestamp(System.currentTimeMillis()));
@@ -77,7 +77,7 @@ public class BusinessDeviceRepositoryTest {
     public void createLocationDevice(){
         LocationDevice locationDevice = new LocationDevice();
         locationDevice.setCode("200011");
-        locationDevice.setName("定位设备1号");
+        locationDevice.setName("厌战式定位设备1号");
         locationDevice.setDetail("无描述");
         locationDevice.setCreateTime(new Timestamp(System.currentTimeMillis()));
         locationDevice.setUpdateTime(new Timestamp(System.currentTimeMillis()));
@@ -91,13 +91,13 @@ public class BusinessDeviceRepositoryTest {
     @Test
     public void createReportDevice(){
         ReportDevice reportDevice = new ReportDevice();
-        reportDevice.setCode("300021");
-        reportDevice.setName("报警设备1号");
-        reportDevice.setDetail("报警了！");
+        reportDevice.setCode("300011");
+        reportDevice.setName("厌战式报警设备1号");
+        reportDevice.setDetail("无描述");
         reportDevice.setCreateTime(new Timestamp(System.currentTimeMillis()));
         reportDevice.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 
-        BusinessDevice businessDevice = businessDeviceRepository.findById(21L).get();
+        BusinessDevice businessDevice = businessDeviceRepository.findById(1L).get();
         reportDevice.setBusinessDevice(businessDevice);
         reportDeviceRepository.save(reportDevice);
         System.err.println("success!");
@@ -106,9 +106,9 @@ public class BusinessDeviceRepositoryTest {
     @Test
     public void createCameraDevice(){
         CameraDevice cameraDevice = new CameraDevice();
-        cameraDevice.setCode("40011");
-        cameraDevice.setName("tora式摄像头1号");
-        cameraDevice.setDetail("什么都有！");
+        cameraDevice.setCode("40012");
+        cameraDevice.setName("厌战式摄像头2号");
+        cameraDevice.setDetail("无描述");
         cameraDevice.setCreateTime(new Timestamp(System.currentTimeMillis()));
         cameraDevice.setUpdateTime(new Timestamp(System.currentTimeMillis()));
 

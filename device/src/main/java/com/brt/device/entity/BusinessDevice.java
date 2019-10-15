@@ -1,11 +1,18 @@
 package com.brt.device.entity;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
 
+/**
+ * @ClassName: BusinessDevice 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author Zeng Nan
+ * @date 2019年10月14日 下午10:17:09
+ */
 @Entity
 @Table(name = "T_BUSINESS_DEVICE", schema = "BRTKPI")
 public class BusinessDevice {

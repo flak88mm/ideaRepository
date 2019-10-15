@@ -5,6 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+/**
+ * @ClassName: BusinessDeviceRepository 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author Zeng Nan
+ * @date 2019年10月14日 下午10:17:48
+ */
 public interface BusinessDeviceRepository extends JpaRepository<BusinessDevice,Long> {
     /**
      * @author Zeng Nan   
