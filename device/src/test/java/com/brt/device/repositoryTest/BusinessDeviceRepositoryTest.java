@@ -38,7 +38,7 @@ public class BusinessDeviceRepositoryTest {
 
     @Test
     public void testForGit(){
-        System.err.println("原始版本 1701");
+        System.err.println("原始版本 rebaseTest");
     }
 
     @Test
