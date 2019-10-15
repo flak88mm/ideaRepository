@@ -70,7 +70,6 @@ public class BusinessDeviceRepositoryTest {
         BusinessDevice businessDevice = new BusinessDevice();
         businessDevice = businessDeviceRepository.getOne(1L);
         System.err.println(businessDevice);
-
     }
 
     @Test
