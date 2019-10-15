@@ -41,6 +41,7 @@ public class BusinessDeviceRepositoryTest {
         System.err.println("原始版本 rebaseTest 再来一次");
         System.err.println("rebaseTest 来自master的修改");
         System.err.println("原始版本 rebaseTest 来自rebaseTestAgain的修改");
+        System.err.println("HEAD所在的分支才可以rebase");
     }
 
     @Test
