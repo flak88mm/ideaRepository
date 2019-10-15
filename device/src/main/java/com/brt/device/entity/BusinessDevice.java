@@ -1,5 +1,7 @@
 package com.brt.device.entity;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Set;
@@ -8,9 +10,12 @@ import java.util.Set;
 @Table(name = "T_BUSINESS_DEVICE", schema = "BRTKPI")
 public class BusinessDevice {
     @Id
-    @GeneratedValue(strategy =GenerationType.SEQUENCE , generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator", initialValue = 1, allocationSize = 1,
-            sequenceName = "SEQ_BUSINESS_DEVICE")
+    @GeneratedValue(generator = "sequenceGenerator")
+    @GenericGenerator(
+            name = "sequenceGenerator",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {@Parameter(name = "sequence_name", value = "SEQ_T_BUSINESS_DEVICE")}
+    )
     private Long id;
     private String code;
     private String name;
