@@ -2,6 +2,7 @@ package com.brt.device.repository;
 
 import com.brt.device.entity.BusinessDevice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
@@ -11,7 +12,7 @@ import org.springframework.data.jpa.repository.Query;
  * @author Zeng Nan
  * @date 2019年10月14日 下午10:17:48
  */
-public interface BusinessDeviceRepository extends JpaRepository<BusinessDevice,Long> {
+public interface BusinessDeviceRepository extends JpaRepository<BusinessDevice,Long>, JpaSpecificationExecutor<BusinessDevice> {
     /**
      * @author Zeng Nan   
      * @date 2019年10月14日 下午10:18:48 

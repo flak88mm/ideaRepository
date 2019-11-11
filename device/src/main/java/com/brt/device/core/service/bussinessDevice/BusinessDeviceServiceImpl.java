@@ -44,7 +44,9 @@ public class BusinessDeviceServiceImpl implements BusinessDeviceService {
         if (pageSize == null || pageNum == null){
             return null;
         }
+        //分页参数
         Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.ASC, "id");
+        //开始分页
         Page<BusinessDevice> businessDevicePage = businessDeviceRepository.findAll(pageable);
         if (businessDevicePage == null){
             throw new CustomBusinessException("业务设备列表为空");

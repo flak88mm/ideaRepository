@@ -16,12 +16,13 @@ import java.sql.Timestamp;
 @Table(name = "T_LOCATION_DEVICE", schema = "BRTKPI")
 public class LocationDevice {
     @Id
-    @GeneratedValue(generator = "sequenceGenerator")
+/*    @GeneratedValue(generator = "sequenceGenerator")
     @GenericGenerator(
             name = "sequenceGenerator",
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {@Parameter(name = "sequence_name", value = "SEQ_T_LOCATION_DEVICE")}
-    )
+    )*/
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String code;
     private String name;
